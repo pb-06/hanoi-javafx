@@ -1,7 +1,9 @@
 package com.example.hanoi;
 
 import javafx.fxml.FXML;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.HashMap;
@@ -16,6 +18,8 @@ public class HanoiController {
     private HanoiModel model;
 
     private Map<Integer, Rectangle> diskMap;
+
+    private Integer selectedPeg = null;
 
     private final int[] PEG_CENTERS = {105, 300, 495};
     private final int BASE_Y = 260;
@@ -53,4 +57,51 @@ public class HanoiController {
         }
     }
 
+    /**
+     * Handles clicks on the background pane to determine peg selection.
+     */
+    @FXML
+    public void onBoardClick(MouseEvent event) {
+        // X koordináta ahová kattintottunk
+        double mouseX = event.getX();
+        // Meghatározzuk melyik oszlopra történt
+        int clickedPegIndex = getPegFromX(mouseX);
+
+        if (clickedPegIndex == -1) return; // Ha egyik oszlopnál se, nem történik semmi
+
+        if (selectedPeg == null) {
+            // Rúd kiválasztása
+            Stack<Integer> sourceStack = model.getPegs().get(clickedPegIndex);
+
+            if (!sourceStack.isEmpty()) {
+                selectedPeg = clickedPegIndex;
+
+                // Felső korong kiemelése
+                int topDiskSize = sourceStack.peek();
+                diskMap.get(topDiskSize).setStroke(Color.WHITE);
+                diskMap.get(topDiskSize).setStrokeWidth(3);
+                System.out.println("Kiválasztott rúd: Rúd " + (clickedPegIndex + 1));
+            }
+        } else {
+            boolean success = model.move(selectedPeg, clickedPegIndex);
+
+            if (success) {
+                System.out.println("A korong sikeresen átmozgatva ide: Rúd " + (clickedPegIndex + 1));
+                render(); // Újrarajzoljuk
+            } else {
+                System.out.println("Helytelen lépés");
+                render(); // Kiemelés eltávolítása
+            }
+
+            selectedPeg = null;
+        }
+    }
+
+    // Felosztjuk a képernyőt 3 részre
+    private int getPegFromX(double x) {
+        double width = board.getWidth(); // 600px
+        if (x < width / 3) return 0; // Bal oldali rúd (0-200)
+        if (x < (width / 3) * 2) return 1; // Középső rúd (200-400)
+        return 2; // Jobb oldali rúd (400-600)
+    }
 }

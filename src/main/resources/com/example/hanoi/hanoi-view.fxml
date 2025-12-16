@@ -7,7 +7,7 @@
 <AnchorPane fx:id="root" prefHeight="300.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.hanoi.HanoiController">
     <!-- Background board area -->
     <children>
-        <Pane fx:id="board" prefHeight="300.0" prefWidth="600.0">
+        <Pane fx:id="board" prefHeight="300.0" prefWidth="600.0" onMouseClicked="#onBoardClick">
             <!-- Pegs (rods) -->
             <children>
                 <!-- Peg 1 -->
