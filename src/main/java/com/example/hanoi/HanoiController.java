@@ -1,6 +1,7 @@
 package com.example.hanoi;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -88,6 +89,10 @@ public class HanoiController {
             if (success) {
                 System.out.println("A korong sikeresen átmozgatva ide: Rúd " + (clickedPegIndex + 1));
                 render(); // Újrarajzoljuk
+
+                if (model.checkWin()) {
+                    showWinMessage();
+                }
             } else {
                 System.out.println("Helytelen lépés");
                 render(); // Kiemelés eltávolítása
@@ -103,5 +108,15 @@ public class HanoiController {
         if (x < width / 3) return 0; // Bal oldali rúd (0-200)
         if (x < (width / 3) * 2) return 1; // Középső rúd (200-400)
         return 2; // Jobb oldali rúd (400-600)
+    }
+
+    private void showWinMessage() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Győztél!");
+        alert.setHeaderText(null);
+        alert.setContentText("Gratulálok! Sikeresen megoldottad a Hanoi-t! :)");
+        alert.showAndWait();
+
+        initialize();
     }
 }

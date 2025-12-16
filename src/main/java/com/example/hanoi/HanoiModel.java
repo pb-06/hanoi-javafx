@@ -55,4 +55,8 @@ public class HanoiModel {
         target.push(source.pop());
         return true;
     }
+
+    public boolean checkWin() {
+        return pegs.get(2).size() == numDisks;
+    }
 }
